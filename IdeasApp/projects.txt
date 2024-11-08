@@ -1,9 +1,0 @@
-#Basic Calculator
--Build a simple calculator with a text-based interface that handles basic arithmetic operations (addition, subtraction, multiplication, division).
-Focus on designing input fields and displaying results within the terminal.
-;
-#Stopwatch and Timer
--Create a terminal-based stopwatch and timer. Users should be able to start, stop, reset, and set time intervals.
-Use ncurses to show real-time updates and manage the timer display.
-;
-
