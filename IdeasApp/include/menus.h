@@ -6,8 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "project.h"
+
 // serves for an array as an index for each menu (menu[MAIN_MENU]->ShowMenu())
-// add ShowMenu() function
 typedef enum menuType_t
 {
     MAIN_MENU = 0,
@@ -29,7 +30,7 @@ typedef struct menu_t
 } menu_t;
 
 int ShowMenu(struct menu_t *menu);
-menu_t *CreateMenu(menuType_t menuType, char **choices, int countOfChoices);
+menu_t *CreateMenu(menuType_t menuType, char **choices, int countOfChoices, project_t *projects);
 
 void FreeMenu(menu_t *menu);
 

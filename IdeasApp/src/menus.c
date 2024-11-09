@@ -3,7 +3,7 @@
 
 static ITEM **InitItems(char **choices, int countOfChoices)
 {
-    ITEM **items = (ITEM **)calloc(countOfChoices, sizeof(ITEM *));
+    ITEM **items = (ITEM **)calloc(countOfChoices+1, sizeof(ITEM *));
     for(int i = 0; i < countOfChoices; i++){
         items[i] = new_item(choices[i], choices[i]);
     }
@@ -134,13 +134,55 @@ static int DifficultyMenu(menu_t *menu)
                 int selected_item = item_index(current_item(menu->menu));
                 switch(selected_item){
                     case 0:
+                    case 1:
+                    case 2:
+                        quit = PROJECTS_MENU;
+                        break;
+                    case 3: // Back
+                        quit = MAIN_MENU;
+                        break;
+                }
+                pos_menu_cursor(menu->menu);
+                break;
+        }
+        wrefresh(menu->win);
+    }
+
+    if(c == KEY_F(1)){
+        quit = -1;
+    }
+    unpost_menu(menu->menu);
+    return quit;
+}
+
+static int ProjectsMenu(menu_t* menu)
+{
+    DrawMenu(menu, "Beginner/Intermediate/Advanced Menu");
+
+    int c;
+    int quit = PROJECTS_MENU;
+    while(quit == PROJECTS_MENU && ((c = wgetch(menu->win)) != KEY_F(1))){ 
+        switch(c){
+            case KEY_DOWN:
+            case 'j':
+                menu_driver(menu->menu, REQ_DOWN_ITEM);
+                break;
+            case KEY_UP:
+            case 'k':
+                menu_driver(menu->menu, REQ_UP_ITEM);
+                break;
+            case 10: // ENTER 
+                int selected_item = item_index(current_item(menu->menu));
+                // change this, cases cant have const number, since i dont know how many projects are there
+                switch(selected_item){
+                    case 0:
                         break;
                     case 1:
                         break;
                     case 2:
                         break;
                     case 3: // Back
-                        quit = MAIN_MENU;
+                        quit = DIFFICULTY_MENU;
                         break;
                 }
                 pos_menu_cursor(menu->menu);
@@ -169,12 +211,13 @@ void FreeMenu(menu_t *menu)
     free(menu);
 }
 
-menu_t *CreateMenu(menuType_t menuType, char **choices, int countOfChoices)
+// later the projects will lead to check which project is of which difficulty, so i can only show the projects i want
+menu_t *CreateMenu(menuType_t menuType, char **choices, int countOfChoices, project_t *projects)
 {
     menu_t *menu = (menu_t *)malloc(sizeof(menu_t));
 
-    menu->countOfChoices = countOfChoices;
     menu->menuType = menuType;
+    menu->countOfChoices = countOfChoices;
     menu->items = InitItems(choices, countOfChoices);
     menu->menu = InitMenu(menu->items);
     menu->win = InitMenuWindow(menu->menu);
@@ -195,6 +238,7 @@ int ShowMenu(struct menu_t *menu)
             returnVal = DifficultyMenu(menu);
             break;
         case PROJECTS_MENU:
+            returnVal = ProjectsMenu(menu);
             break;
         case SHOW_DESCRIPTION:
             break;
