@@ -23,38 +23,41 @@ int main(int argc, char* argv[])
 
     InitCurses();
 
-    char *temp[] =
+    char *mainMenuOptions[] =
         {
             "Show projects",
             "Exit",
         };
+    char *difficultyMenuOptions[] =
+        {
+            "Beginner",
+            "Intermediate",
+            "Advanced",
+            "Back",
+        };
 
     menu_t *menus[TOTAL_MENUS];
-    menus[MAIN_MENU] = CreateMenu(MAIN_MENU, temp, ARRAY_SIZE(temp));
-    menus[DIFFICULTY_MENU] = NULL; 
+    menus[MAIN_MENU] = CreateMenu(MAIN_MENU, mainMenuOptions, ARRAY_SIZE(mainMenuOptions));
+    menus[DIFFICULTY_MENU] = CreateMenu(DIFFICULTY_MENU, difficultyMenuOptions, ARRAY_SIZE(difficultyMenuOptions)); 
     menus[PROJECTS_MENU] = NULL;
     menus[SHOW_DESCRIPTION] = NULL;
 
-    int quit = 0;
     int menuIndex = 0; // main menu
-    while(quit == 0){
+    while(menuIndex != -1){
         switch(menuIndex){
-            case 0:
+            case MAIN_MENU:
                 menuIndex = menus[menuIndex]->ShowMenu(menus[menuIndex]);
                 break;
-            case 1:
-                // menuIndex = DifficultyMenu();
+            case DIFFICULTY_MENU:
+                menuIndex = menus[menuIndex]->ShowMenu(menus[menuIndex]);
                 break;
-            case 2:
+            case PROJECTS_MENU:
+                // HAVE OPTIONAL ARGUMENT IN SHOWMENU FUNCTION FOR PROJECTS LIST
                 // menuIndex = ProjectsMenu();
                 break;
-            case 3:
+            // MAYBE GET RID OF THIS SINCE IT IS NOT A MENU
+            case SHOW_DESCRIPTION:
                 // menuIndex = ShowDescription();
-                break;
-            default:
-                if(menuIndex == -1){
-                    quit = 1;
-                }
                 break;
         }
     }

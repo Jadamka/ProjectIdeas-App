@@ -78,8 +78,8 @@ static int MainMenu(menu_t *menu)
     DrawMenu(menu, "Main Menu");
 
     int c;
-    int quit = 0;
-    while((c = wgetch(menu->win)) != KEY_F(1)){
+    int quit = MAIN_MENU;
+    while(((c = wgetch(menu->win)) != KEY_F(1)) && quit == MAIN_MENU){
         switch(c){
             case KEY_DOWN:
             case 'j':
@@ -93,23 +93,71 @@ static int MainMenu(menu_t *menu)
                 int selected_item = item_index(current_item(menu->menu));
                 switch(selected_item){
                     case 0: // Show projects
-                        quit = 1;
+                        quit = DIFFICULTY_MENU;
                         break;
                     case 1: // Exit
-                        quit = 1;
+                        quit = -1;
                         break;
                 }
                 pos_menu_cursor(menu->menu);
                 break;
         }
         wrefresh(menu->win);
-        if(quit == 1){
+        if(quit != MAIN_MENU){
             break;
         }
     }
 
+    if(c == KEY_F(1)){
+        quit = -1;
+    }
     wclear(menu->win);
-    return -1;
+    return quit;
+}
+
+static int DifficultyMenu(menu_t *menu)
+{
+    DrawMenu(menu, "Difficulty Menu");
+
+    int c;
+    int quit = DIFFICULTY_MENU;
+    while(((c = wgetch(menu->win)) != KEY_F(1)) && quit == DIFFICULTY_MENU){
+        switch(c){
+            case KEY_DOWN:
+            case 'j':
+                menu_driver(menu->menu, REQ_DOWN_ITEM);
+                break;
+            case KEY_UP:
+            case 'k':
+                menu_driver(menu->menu, REQ_UP_ITEM);
+                break;
+            case 10: // ENTER 
+                int selected_item = item_index(current_item(menu->menu));
+                switch(selected_item){
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3: // Back
+                        quit = MAIN_MENU;
+                        break;
+                }
+                pos_menu_cursor(menu->menu);
+                break;
+        }
+        wrefresh(menu->win);
+        if(quit != DIFFICULTY_MENU){
+            break;
+        }
+    }
+
+    if(c == KEY_F(1)){
+        quit = -1;
+    }
+    wclear(menu->win);
+    return quit;
 }
 
 void FreeMenu(menu_t *menu)
@@ -148,6 +196,7 @@ int ShowMenu(struct menu_t *menu)
             returnVal = MainMenu(menu);
             break;
         case DIFFICULTY_MENU:
+            returnVal = DifficultyMenu(menu);
             break;
         case PROJECTS_MENU:
             break;
