@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 
     char *mainMenuOptions[] =
         {
-            "Show projects",
+            "Show ideas",
             "Exit",
         };
     char *difficultyMenuOptions[] =
