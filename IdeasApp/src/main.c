@@ -6,6 +6,7 @@
 
 #include "project.h"
 #include "menus.h"
+#include "utils.h"
 
 void InitCurses();
 
@@ -22,13 +23,24 @@ int main(int argc, char* argv[])
 
     InitCurses();
 
+    char *temp[] =
+        {
+            "Show projects",
+            "Exit",
+        };
+
+    menu_t *menus[TOTAL_MENUS];
+    menus[MAIN_MENU] = CreateMenu(MAIN_MENU, temp, ARRAY_SIZE(temp));
+    menus[DIFFICULTY_MENU] = NULL; 
+    menus[PROJECTS_MENU] = NULL;
+    menus[SHOW_DESCRIPTION] = NULL;
+
     int quit = 0;
-    int menuIndex = 0;
+    int menuIndex = 0; // main menu
     while(quit == 0){
         switch(menuIndex){
-            // all menus will be in an array that will have struct menu_t
             case 0:
-                // menuIndex = MainMenu();
+                menuIndex = menus[menuIndex]->ShowMenu(menus[menuIndex]);
                 break;
             case 1:
                 // menuIndex = DifficultyMenu();
@@ -50,6 +62,11 @@ int main(int argc, char* argv[])
     endwin();
 
     FreeProjects(projects, &projectsCount);
+    for(int i = 0; i < TOTAL_MENUS; i++){
+        if(menus[i] != NULL){
+            FreeMenu(menus[i]);
+        }
+    }
     return 0;
 }
 
