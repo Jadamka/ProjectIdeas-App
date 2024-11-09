@@ -79,7 +79,7 @@ static int MainMenu(menu_t *menu)
 
     int c;
     int quit = MAIN_MENU;
-    while(((c = wgetch(menu->win)) != KEY_F(1)) && quit == MAIN_MENU){
+    while(quit == MAIN_MENU && ((c = wgetch(menu->win)) != KEY_F(1))){
         switch(c){
             case KEY_DOWN:
             case 'j':
@@ -103,15 +103,14 @@ static int MainMenu(menu_t *menu)
                 break;
         }
         wrefresh(menu->win);
-        if(quit != MAIN_MENU){
-            break;
-        }
     }
 
     if(c == KEY_F(1)){
         quit = -1;
     }
-    wclear(menu->win);
+    // should be wclear(menu->win) but that would make items not show when returning until I press UP/DOWN key
+    // so i will use unpost_menu intead... not sure if it is okay tho
+    unpost_menu(menu->menu);
     return quit;
 }
 
@@ -121,7 +120,7 @@ static int DifficultyMenu(menu_t *menu)
 
     int c;
     int quit = DIFFICULTY_MENU;
-    while(((c = wgetch(menu->win)) != KEY_F(1)) && quit == DIFFICULTY_MENU){
+    while(quit == DIFFICULTY_MENU && ((c = wgetch(menu->win)) != KEY_F(1))){ 
         switch(c){
             case KEY_DOWN:
             case 'j':
@@ -148,15 +147,12 @@ static int DifficultyMenu(menu_t *menu)
                 break;
         }
         wrefresh(menu->win);
-        if(quit != DIFFICULTY_MENU){
-            break;
-        }
     }
 
     if(c == KEY_F(1)){
         quit = -1;
     }
-    wclear(menu->win);
+    unpost_menu(menu->menu);
     return quit;
 }
 
