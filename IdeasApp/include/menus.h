@@ -23,7 +23,7 @@ typedef enum menuType_t
     DIFFICULTY_MENU = 1,
     PROJECTS_MENU = 2,
     SHOW_DESCRIPTION = 3, // not a menu, but who cares
-    TOTAL_MENUS = 4; // number of menus
+    TOTAL_MENUS; // number of menus
 } menuType_t;
 
 // each menu could return int from enum on which menu should open next ??? Loop and all logic would be inside main
