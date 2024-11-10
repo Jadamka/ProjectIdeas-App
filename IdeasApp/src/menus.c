@@ -16,7 +16,7 @@ static MENU *InitMenu(ITEM **items)
 {
     MENU *menu = new_menu((ITEM **)items);
     menu_opts_off(menu, O_SHOWDESC);
-    set_menu_mark(menu, " > ");
+    set_menu_mark(menu, " >");
 
     return menu;
 }

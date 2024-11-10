@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
             case PROJECTS_MENU:
                 menuIndex = menus[menuIndex]->ShowMenu(menus[menuIndex]);
                 break;
-            // MAYBE GET RID OF THIS SINCE IT IS NOT A MENU
+            // this will show text in the window and when enter is pressed it will go back
             case SHOW_DESCRIPTION:
                 // menuIndex = ShowDescription();
                 break;
