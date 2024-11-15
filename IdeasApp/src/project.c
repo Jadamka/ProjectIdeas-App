@@ -1,6 +1,8 @@
 #include "project.h"
+#include <stdlib.h>
+#include <string.h>
 
-int GetNumOfLines(FILE *fptr)
+int get_num_of_lines(FILE *fptr)
 {
     char ch;
     int lines = 0;
@@ -13,7 +15,7 @@ int GetNumOfLines(FILE *fptr)
     return lines - 3; // 3 difficulties (cant have empty lines, because i do line[strlen(line) - 1] = 0 
 }
 
-project_t *ReadProjects(const char *path, int *projectsCount)
+project_t *read_projects(const char *path, int *projectsCount)
 {
     FILE *fptr;
     char *line = NULL;
@@ -27,7 +29,7 @@ project_t *ReadProjects(const char *path, int *projectsCount)
     }
 
     // Gets number of lines in a file, so i can allocate memory for Project array
-    *projectsCount = GetNumOfLines(fptr);
+    *projectsCount = get_num_of_lines(fptr);
     project_t *projects = (project_t *)malloc(sizeof(project_t) * (*projectsCount));
 
     // getNumOfLines moved pointer to the end of file. This sets it back
@@ -76,7 +78,7 @@ project_t *ReadProjects(const char *path, int *projectsCount)
     return projects;
 }
 
-void FreeProjects(project_t *projects, int *projectsCount)
+void free_projects(project_t *projects, int *projectsCount)
 {
     if(projects != NULL){
         for(int i = 0; i < *projectsCount; i++){

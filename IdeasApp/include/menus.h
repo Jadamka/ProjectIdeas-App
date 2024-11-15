@@ -3,13 +3,11 @@
 
 #include <ncurses.h>
 #include <menu.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "project.h"
 
 // serves for an array as an index for each menu (menu[MAIN_MENU]->ShowMenu())
-typedef enum menuType_t
+typedef enum menuType
 {
     MAIN_MENU = 0,
     DIFFICULTY_MENU = 1,
@@ -19,19 +17,19 @@ typedef enum menuType_t
 } menuType_t;
 
 // maybe add title ? char title[80] ???
-typedef struct menu_t
+typedef struct menu
 {
     int countOfChoices;
     menuType_t menuType;
     ITEM **items;
     MENU *menu;
     WINDOW *win;
-    int (*ShowMenu)(struct menu_t *self);
+    int (*ShowMenu)(struct menu *self);
 } menu_t;
 
-int ShowMenu(struct menu_t *menu);
-menu_t *CreateMenu(menuType_t menuType, char **choices, int countOfChoices, project_t *projects);
+int show_menu(struct menu *menu);
+menu_t *create_menu(menuType_t menuType, char **choices, int countOfChoices, project_t *projects);
 
-void FreeMenu(menu_t *menu);
+void free_mymenu(menu_t *menu);
 
 #endif

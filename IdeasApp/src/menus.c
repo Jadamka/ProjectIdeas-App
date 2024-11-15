@@ -1,7 +1,8 @@
 #include "menus.h"
-#include "utils.h"
+#include <stdlib.h>
+#include <string.h>
 
-static ITEM **InitItems(char **choices, int countOfChoices)
+static ITEM **init_items(char **choices, int countOfChoices)
 {
     ITEM **items = (ITEM **)calloc(countOfChoices+1, sizeof(ITEM *));
     for(int i = 0; i < countOfChoices; i++){
@@ -12,7 +13,7 @@ static ITEM **InitItems(char **choices, int countOfChoices)
     return items;
 }
 
-static MENU *InitMenu(ITEM **items)
+static MENU *init_menu(ITEM **items)
 {
     MENU *menu = new_menu((ITEM **)items);
     menu_opts_off(menu, O_SHOWDESC);
@@ -21,7 +22,7 @@ static MENU *InitMenu(ITEM **items)
     return menu;
 }
 
-static WINDOW *InitMenuWindow(MENU *menu)
+static WINDOW *init_menu_window(MENU *menu)
 {
     WINDOW *win;
     win = newwin(LINES-10, COLS-10, 5, 5);
@@ -34,7 +35,7 @@ static WINDOW *InitMenuWindow(MENU *menu)
 }
 
 
-static void PrintInMiddle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)
+static void print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)
 {
     int length, x, y;
     float temp;
@@ -60,10 +61,10 @@ static void PrintInMiddle(WINDOW *win, int starty, int startx, int width, char *
     refresh();
 }
 
-static void DrawMenu(menu_t *menu, char *title)
+static void draw_menu(menu_t *menu, char *title)
 {
     box(menu->win, 0, 0);
-    PrintInMiddle(menu->win, 1, 0, COLS-10, title, 0);
+    print_in_middle(menu->win, 1, 0, COLS-10, title, 0);
     mvwaddch(menu->win, 2, 0, ACS_LTEE);
     mvwhline(menu->win, 2, 1, ACS_HLINE, COLS-12);
     mvwaddch(menu->win, 2, COLS-11, ACS_RTEE);
@@ -73,9 +74,9 @@ static void DrawMenu(menu_t *menu, char *title)
     wrefresh(menu->win);
 }
 
-static int MainMenu(menu_t *menu)
+static int main_menu(menu_t *menu)
 {
-    DrawMenu(menu, "Main Menu");
+    draw_menu(menu, "Main Menu");
 
     int c;
     int quit = MAIN_MENU;
@@ -114,9 +115,9 @@ static int MainMenu(menu_t *menu)
     return quit;
 }
 
-static int DifficultyMenu(menu_t *menu)
+static int difficulty_menu(menu_t *menu)
 {
-    DrawMenu(menu, "Difficulty Menu");
+    draw_menu(menu, "Difficulty Menu");
 
     int c;
     int quit = DIFFICULTY_MENU;
@@ -155,9 +156,9 @@ static int DifficultyMenu(menu_t *menu)
     return quit;
 }
 
-static int ProjectsMenu(menu_t* menu)
+static int projects_menu(menu_t* menu)
 {
-    DrawMenu(menu, "Beginner/Intermediate/Advanced Menu");
+    draw_menu(menu, "Beginner/Intermediate/Advanced Menu");
 
     int c;
     int quit = PROJECTS_MENU;
@@ -198,7 +199,7 @@ static int ProjectsMenu(menu_t* menu)
     return quit;
 }
 
-void FreeMenu(menu_t *menu)
+void free_mymenu(menu_t *menu)
 {
     unpost_menu(menu->menu);
     free_menu(menu->menu);
@@ -212,39 +213,39 @@ void FreeMenu(menu_t *menu)
 }
 
 // later the projects will lead to check which project is of which difficulty, so i can only show the projects i want
-menu_t *CreateMenu(menuType_t menuType, char **choices, int countOfChoices, project_t *projects)
+menu_t *create_menu(menuType_t menuType, char **choices, int countOfChoices, project_t *projects)
 {
     menu_t *menu = (menu_t *)malloc(sizeof(menu_t));
 
     menu->menuType = menuType;
     menu->countOfChoices = countOfChoices;
-    menu->items = InitItems(choices, countOfChoices);
-    menu->menu = InitMenu(menu->items);
-    menu->win = InitMenuWindow(menu->menu);
-    menu->ShowMenu = &ShowMenu;
+    menu->items = init_items(choices, countOfChoices);
+    menu->menu = init_menu(menu->items);
+    menu->win = init_menu_window(menu->menu);
+    menu->ShowMenu = &show_menu;
 
     return menu;
 }
 
-int ShowMenu(struct menu_t *menu)
+int show_menu(struct menu *menu)
 {
     int returnVal = menu->menuType;
 
     switch(returnVal){
         case MAIN_MENU:
-            returnVal = MainMenu(menu);
+            returnVal = main_menu(menu);
             break;
         case DIFFICULTY_MENU:
-            returnVal = DifficultyMenu(menu);
+            returnVal = difficulty_menu(menu);
             break;
         case PROJECTS_MENU:
-            returnVal = ProjectsMenu(menu);
+            returnVal = projects_menu(menu);
             break;
         case SHOW_DESCRIPTION:
             break;
     }
 
-    returnVal;
+    return returnVal;
 }
 
 

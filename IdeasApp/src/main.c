@@ -8,20 +8,20 @@
 #include "menus.h"
 #include "utils.h"
 
-void InitCurses();
+void init_curses();
 
 int main(int argc, char* argv[])
 {
     int projectsCount = 0;
     project_t *projects = NULL;
 
-    projects = ReadProjects("data/data.ini", &projectsCount);
+    projects = read_projects("data/data.ini", &projectsCount);
     if(projects == NULL){
         printf("Failed to load projects\n");
         return 1;
     }
 
-    InitCurses();
+    init_curses();
 
     char *mainMenuOptions[] =
         {
@@ -42,9 +42,9 @@ int main(int argc, char* argv[])
     projectsMenuOptions[projectsCount] = "Back";
 
     menu_t *menus[TOTAL_MENUS];
-    menus[MAIN_MENU] = CreateMenu(MAIN_MENU, mainMenuOptions, ARRAY_SIZE(mainMenuOptions), NULL);
-    menus[DIFFICULTY_MENU] = CreateMenu(DIFFICULTY_MENU, difficultyMenuOptions, ARRAY_SIZE(difficultyMenuOptions), NULL); 
-    menus[PROJECTS_MENU] = CreateMenu(PROJECTS_MENU, projectsMenuOptions, projectsCount+1, projects);
+    menus[MAIN_MENU] = create_menu(MAIN_MENU, mainMenuOptions, ARRAY_SIZE(mainMenuOptions), NULL);
+    menus[DIFFICULTY_MENU] = create_menu(DIFFICULTY_MENU, difficultyMenuOptions, ARRAY_SIZE(difficultyMenuOptions), NULL); 
+    menus[PROJECTS_MENU] = create_menu(PROJECTS_MENU, projectsMenuOptions, projectsCount+1, projects);
     menus[SHOW_DESCRIPTION] = NULL;
 
     int menuIndex = 0; // main menu
@@ -68,16 +68,16 @@ int main(int argc, char* argv[])
 
     endwin();
 
-    FreeProjects(projects, &projectsCount);
+    free_projects(projects, &projectsCount);
     for(int i = 0; i < TOTAL_MENUS; i++){
         if(menus[i] != NULL){
-            FreeMenu(menus[i]);
+            free_mymenu(menus[i]);
         }
     }
     return 0;
 }
 
-void InitCurses()
+void init_curses()
 {
     initscr();
     start_color();
